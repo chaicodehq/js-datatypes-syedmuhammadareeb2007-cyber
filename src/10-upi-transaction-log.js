@@ -47,5 +47,111 @@
  *   //      frequentContact: "Swiggy", allAbove100: false, hasLargeTransaction: true }
  */
 export function analyzeUPITransactions(transactions) {
-  // Your code here
+
+  // Validation
+  if (!Array.isArray(transactions) || transactions.length === 0) {
+    return null;
+  }
+
+  // Keep only valid transactions
+  const validTransactions = transactions.filter(transaction =>
+    typeof transaction.amount === "number" &&
+    transaction.amount > 0 &&
+    (transaction.type === "credit" || transaction.type === "debit")
+  );
+
+  if (validTransactions.length === 0) {
+    return null;
+  }
+
+  // Total Credit
+  const totalCredit = validTransactions
+    .filter(transaction => transaction.type === "credit")
+    .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+  // Total Debit
+  const totalDebit = validTransactions
+    .filter(transaction => transaction.type === "debit")
+    .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+  // Net Balance
+  const netBalance = totalCredit - totalDebit;
+
+  // Transaction Count
+  const transactionCount = validTransactions.length;
+
+  // Average Transaction
+  const totalAmount = validTransactions.reduce(
+    (sum, transaction) => sum + transaction.amount,
+    0
+  );
+
+  const avgTransaction = Math.round(
+    totalAmount / transactionCount
+  );
+
+  // Highest Transaction
+  const highestAmount = Math.max(
+    ...validTransactions.map(transaction => transaction.amount)
+  );
+
+  const highestTransaction = validTransactions.find(
+    transaction => transaction.amount === highestAmount
+  );
+
+  // Category Breakdown
+  const categoryBreakdown = validTransactions.reduce((categories, transaction) => {
+
+    categories[transaction.category] =
+      (categories[transaction.category] || 0) + transaction.amount;
+
+    return categories;
+
+  }, {});
+
+  // Frequent Contact
+  const contactCount = validTransactions.reduce((contacts, transaction) => {
+
+    contacts[transaction.to] =
+      (contacts[transaction.to] || 0) + 1;
+
+    return contacts;
+
+  }, {});
+
+  let frequentContact = "";
+  let maxCount = 0;
+
+  for (const [contact, count] of Object.entries(contactCount)) {
+
+    if (count > maxCount) {
+      maxCount = count;
+      frequentContact = contact;
+    }
+
+  }
+
+  // Every amount >100
+  const allAbove100 = validTransactions.every(
+    transaction => transaction.amount > 100
+  );
+
+  // Any amount >=5000
+  const hasLargeTransaction = validTransactions.some(
+    transaction => transaction.amount >= 5000
+  );
+
+  return {
+    totalCredit,
+    totalDebit,
+    netBalance,
+    transactionCount,
+    avgTransaction,
+    highestTransaction,
+    categoryBreakdown,
+    frequentContact,
+    allAbove100,
+    hasLargeTransaction
+  };
+
 }

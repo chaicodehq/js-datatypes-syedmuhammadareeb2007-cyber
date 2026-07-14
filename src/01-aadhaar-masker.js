@@ -29,24 +29,22 @@
  */
 export function maskAadhaar(aadhaarNumber) {
   // Your code here
-  if (typeof aadhaar !== "string") {
+  if (typeof aadhaarNumber !== "string") {
     return "INVALID";
   }
 
-  if (aadhaar.length !== 12) {
+  if (aadhaarNumber.length !== 12)  {
     return "INVALID";
   }
 
-  for (let i = 0; i < aadhaar.length; i++) {
-    if (aadhaar[i] < '0' || aadhaar[i] > '9') {
+  for (let i = 0; i < aadhaarNumber.length; i++) {
+  if (aadhaarNumber[i] < '0' || aadhaarNumber[i] > '9') { 
       return "INVALID";
     }
   }
 
-  let lastFour = aadhaar.slice(-4);
-
+let lastFour = aadhaarNumber.slice(-4); 
   let maskedPart = "X".repeat(8);
-
   let result = maskedPart.slice(0,4) + "-" + maskedPart.slice(4,8) + "-" + lastFour;
 
   return result;

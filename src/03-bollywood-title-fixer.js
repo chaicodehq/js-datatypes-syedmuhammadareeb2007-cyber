@@ -54,7 +54,7 @@ export function fixBollywoodTitle(title) {
     }
 
     return word.charAt(0).toUpperCase() + word.slice(1);
-
+ 
   });
 
   return result.join(" ");

@@ -14,6 +14,7 @@
  *       "A+" (>= 90), "A" (>= 80), "B" (>= 70), "C" (>= 60), "D" (>= 40), "F" (< 40)
  *     - highestSubject: subject name with highest marks (use Object.entries)
  *     - lowestSubject: subject name with lowest marks
+ * 
  *     - passedSubjects: array of subject names where marks >= 40 (use filter)
  *     - failedSubjects: array of subject names where marks < 40
  *     - subjectCount: total number of subjects (Object.keys().length)
@@ -42,4 +43,63 @@
  */
 export function generateReportCard(student) {
   // Your code here
+
+  if (typeof student !== "object" || student === null) return null;
+  if (typeof student.name !== "string" || student.name === "") return null;
+  if (typeof student.marks !== "object" || student.marks === null) return null;
+
+  const entries = Object.entries(student.marks);
+  const numSubjects = entries.length;
+  
+  if (numSubjects === 0) return null;
+
+  for (const [, mark] of entries) {
+    if (typeof mark !== "number" || Number.isNaN(mark) || mark < 0 || mark > 100) {
+      return null;
+    }
+  }
+
+  const marksArray = Object.values(student.marks);
+  const totalMarks = marksArray.reduce((sum, mark) => sum + mark, 0);
+
+  const rawPercentage = (totalMarks / (numSubjects * 100)) * 100;
+  const percentage = parseFloat(rawPercentage.toFixed(2));
+
+  let grade = "F";
+  if (percentage >= 90) grade = "A+";
+  else if (percentage >= 80) grade = "A";
+  else if (percentage >= 70) grade = "B";
+  else if (percentage >= 60) grade = "C";
+  else if (percentage >= 40) grade = "D";
+
+  // 4. Highest and Lowest Subjects using reduce on entries array
+  const highestRecord = entries.reduce((highest, current) => {
+    return current[1] > highest[1] ? current : highest;
+  });
+  const highestSubject = highestRecord[0];
+
+  const lowestRecord = entries.reduce((lowest, current) => {
+    return current[1] < lowest[1] ? current : lowest;
+  });
+  const lowestSubject = lowestRecord[0];
+
+  const passedSubjects = entries
+    .filter(([, mark]) => mark >= 40)
+    .map(([subject]) => subject);
+
+  const failedSubjects = entries
+    .filter(([, mark]) => mark < 40)
+    .map(([subject]) => subject);
+
+  return {
+    name: student.name,
+    totalMarks,
+    percentage,
+    grade,
+    highestSubject,
+    lowestSubject,
+    passedSubjects,
+    failedSubjects,
+    subjectCount: numSubjects
+  };
 }

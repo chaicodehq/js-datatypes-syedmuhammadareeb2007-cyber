@@ -40,7 +40,7 @@ export function formatChaiMenu(items) {
 
   let formatted = validItems.map(item =>
     `${item.name.toUpperCase()} - Rs.${item.price}`
-  );
+  ); 
 
   return formatted.join(" | "); 
 }

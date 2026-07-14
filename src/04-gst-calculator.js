@@ -40,7 +40,7 @@
  */
 export function calculateGST(amount, category) {
   // Your code here
-  function calculateGST(amount, category) {
+  
 
   if (!Number.isFinite(amount) || amount <= 0) return null;
   if (typeof category !== "string") return null;
@@ -51,7 +51,7 @@ export function calculateGST(amount, category) {
     essential: 0,
     food: 5,
     standard: 12,
-    electronics: 18,
+    electronics: 18, 
     luxury: 28
   };
 
@@ -73,4 +73,4 @@ export function calculateGST(amount, category) {
   };
 }
 
-}
+
